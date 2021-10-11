@@ -1,6 +1,8 @@
 // Store the profile information  
 const profileInfo = document.querySelector(".overview");
 const username = "madjidiaw";
+// Display the unordered list of repos 
+const repoList = document.querySelector(".repo-list");
 
 const getProfile = async function () {
     const fetchResponse = await fetch(`https://api.github.com/users/${username}`);
@@ -26,4 +28,23 @@ const displayUserInfo = function(userData) {
           <p><strong>Number of public repos:</strong> ${userData.public_repos}</p>
         </div>`;
     profileInfo.append(newDiv);    
+};
+
+// Fetch repo data
+const getRepos = async function () {
+    const fetchResponse = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const repoInfo = await fetchResponse.json();
+    //console.log(repoInfo);  
+    listRepoInfo(repoInfo);
+};
+getRepos();
+
+// Display information about the repos
+const listRepoInfo = function(repo) {
+    for (let project of repo) {
+        let li = document.createElement("li");
+        li.innerHTML = `
+           <li class="repo"> <h3>${project.name}</h3></li>`; 
+        repoList.append(li);   
+    }
 };
