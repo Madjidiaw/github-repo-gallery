@@ -7,6 +7,10 @@ const repoList = document.querySelector(".repo-list");
 const repoInformation = document.querySelector(".repos");
 // show individual repository data
 const individualRepoData = document.querySelector(".repo-data");
+// Button used to click to go back to the repository gallery
+const backToRepoGallery = document.querySelector(".view-repos");
+// Search input field, accept input from use to search for a repo
+const filterInput = document.querySelector(".filter-repos");
 
 const getProfile = async function () {
     const fetchResponse = await fetch(`https://api.github.com/users/${username}`);
@@ -31,7 +35,8 @@ const displayUserInfo = function(userData) {
           <p><strong>Location:</strong> ${userData.location}</p>
           <p><strong>Number of public repos:</strong> ${userData.public_repos}</p>
         </div>`;
-    profileInfo.append(newDiv);    
+    profileInfo.append(newDiv);   
+
 };
 
 // Fetch the repository data
@@ -45,13 +50,15 @@ getRepos();
 
 // Display information about the repositories
 const listRepoInfo = function(repo) {
+    filterInput.classList.remove("hide");
     for (let project of repo) {
         let li = document.createElement("li");
         li.innerHTML = `
            <li class="repo"> <h3>${project.name}</h3></li>
            `; 
         repoList.append(li);   
-    }
+    };
+     
 };
 
 // Click event on the unordered list class 'repo-list'  
@@ -96,4 +103,27 @@ const specificRepoInfo = function(repoInfo, languages) {
     individualRepoData.append(newDiv);
     individualRepoData.classList.remove("hide");
     repoInformation.classList.add("hide");  
-}
+    backToRepoGallery.classList.remove("hide"); 
+};
+
+// Click event listener to allow users to redirect to the repo gallery
+backToRepoGallery.addEventListener("click", function() {
+    repoInformation.classList.remove("hide");
+    individualRepoData.classList.add("hide");
+    backToRepoGallery.classList.add("hide"); 
+});
+
+// Attach an input event listern to activate the search field
+filterInput.addEventListener("input", function(e) {
+    const capturedSearch = e.target.value;
+    console.log(capturedSearch);
+    const repos = document.querySelectorAll("repo");
+    for (let repo of repos) {
+        let lowercaseRepo = repo.innerText.toLowerCase();
+        if (lowercaseRepo.includes(capturedSearch.toLowerCase())) {
+            individualRepoData.classList.remove("hide");
+        } else {
+            individualRepoData.classList.add("hide");
+        }
+    };
+});
