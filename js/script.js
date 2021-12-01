@@ -1,3 +1,5 @@
+/* JS Code to for REST API */
+
 // Store the profile information  
 const profileInfo = document.querySelector(".overview");
 const username = "madjidiaw";
@@ -14,8 +16,7 @@ const filterInput = document.querySelector(".filter-repos");
 
 const getProfile = async function () {
     const fetchResponse = await fetch(`https://api.github.com/users/${username}`);
-    const userinfo = await fetchResponse.json();
-    //console.log(userinfo);  
+    const userinfo = await fetchResponse.json(); 
     displayUserInfo(userinfo);
 };
 getProfile();
@@ -23,7 +24,6 @@ getProfile();
 // Fetch and Display the user information
 const displayUserInfo = function(userData) {
     const newDiv = document.createElement("div");
-    //newDiv.className = "user-info";
     newDiv.classList.add("user-info");
     newDiv.innerHTML = `
         <figure>
@@ -44,7 +44,6 @@ const displayUserInfo = function(userData) {
 const getRepos = async function (username) {
     const fetchResponse = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
     const repoInfo = await fetchResponse.json();
-    //console.log(repoInfo);  
     listRepoInfo(repoInfo);
 };
 
@@ -65,7 +64,6 @@ const listRepoInfo = function(repo) {
 repoList.addEventListener("click", function(e) {
     if (e.target.matches("h3")) {
         let repoName = e.target.innerText;
-        //console.log(repoName);
         getSingleRepo(repoName);
     }
 });
@@ -73,18 +71,13 @@ repoList.addEventListener("click", function(e) {
 // Grab information about a specific repository
 const getSingleRepo = async function(repoName) {
     const repoData = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
-    //const repoInfo = await fetch(`https://api.github.com/users/${username}/repos/${repoName}`);
     const repoInfo = await repoData.json();
-    //console.log(repoInfo);
-    //const fetchLanguages = await fetch(`https://api.github.com/repos/${username}/${repoName}/languages`);
     const fetchLanguages = await fetch(repoInfo.languages_url);
     const languageData = await fetchLanguages.json();
-    //console.log(languageData);
     const languages = [];
     for (let key in languageData) {
         languages.push(key);
     }
-    //console.log(languages);
     specificRepoInfo(repoInfo, languages);
 };
 
@@ -118,7 +111,6 @@ backToRepoGallery.addEventListener("click", function() {
 filterInput.addEventListener("input", function(e) {
     const capturedSearch = e.target.value;
     const searchInputToLower = capturedSearch.toLowerCase();
-    //console.log(capturedSearch);
     const repos = document.querySelectorAll(".repo");
     for (let repo of repos) {
         let lowercaseRepo = repo.innerText.toLowerCase();
